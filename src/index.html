@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/favicon.png" />
+    <title>Our Stories</title>
+
+    <script type="module" src="./scripts/index.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link rel="manifest" href="./manifest.json" />
+  </head>
+  <body>
+    <header>
+      <a href="#main-content" class="skip-link">Skip to Content</a>
+      <div class="main-header container">
+        <a class="brand-name" href="#/">Our Stories</a>
+        <nav id="navigation-drawer" class="navigation-drawer">
+          <ul id="nav-list" class="nav-list">
+            <li><a href="#/">Beranda</a></li>
+            <li><a href="#/about">About</a></li>
+            <li><a href="#/login">Login</a></li>
+            <li><a href="#/register">Register</a></li>
+            <button id="subscribe-btn">Subscribe Notifikasi</button>
+            <button id="unsubscribe-btn">Unsubscribe Notifikasi</button>
+          </ul>
+        </nav>
+
+        <button id="drawer-button" class="drawer-button">☰</button>
+      </div>
+    </header>
+
+    <main tabindex="-1" id="main-content" class="main-content"></main>
+  </body>
+</html>
