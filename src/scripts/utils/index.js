@@ -19,7 +19,7 @@ export async function registerServiceWorker() {
   if (isServiceWorkerAvailable()) {
     window.addEventListener("load", function () {
       navigator.serviceWorker
-        .register("/scripts/sw.js")
+        .register("/sw.js", { type: "module" })
         .then(function (registration) {
           console.log("ServiceWorker registration successful with scope: ", registration.scope);
         })

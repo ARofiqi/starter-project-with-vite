@@ -13,30 +13,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     navigationDrawer: document.querySelector("#navigation-drawer"),
   });
 
-  await app.renderPage();
-
   await registerServiceWorker();
+  await app.renderPage();
 
   window.addEventListener("hashchange", async () => {
     await app.renderPage();
   });
 
-  // Link skip to main content
   const skipLink = document.querySelector(".skip-link");
   const mainContent = document.querySelector("#main-content");
 
   skipLink.addEventListener("click", function (e) {
     e.preventDefault();
 
-    // Fokus ke konten utama
     mainContent.focus();
 
-    // Smooth scroll ke konten utama
     mainContent.scrollIntoView({
       behavior: "smooth",
     });
 
-    // Optional: Hilangkan fokus dari skip link setelah selesai
     setTimeout(() => {
       skipLink.blur();
     }, 1000);

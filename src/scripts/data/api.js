@@ -1,7 +1,6 @@
 import CONFIG from "../config";
-import { saveStory, getStories } from '../IndexedDB.js';
 
-const CACHE_NAME = CONFIG.CACHE_NAME;
+const CACHE_NAME = CONFIG.DATA_CACHE_NAME;
 
 const ENDPOINTS = {
   ENDPOINT: `${CONFIG.BASE_URL}`,
@@ -10,7 +9,7 @@ const ENDPOINTS = {
   LOGIN: `${CONFIG.BASE_URL}/login`,
   REGISTER: `${CONFIG.BASE_URL}/register`,
   SUBSCRIBE: `${CONFIG.BASE_URL}/notifications/subscribe`,
-  UNSUBSCRIBE: `${CONFIG.BASE_URL}/notifications/unsubscribe`,
+  UNSUBSCRIBE: `${CONFIG.BASE_URL}/notifications/subscribe`,
 };
 
 async function cacheResponse(request, response) {
@@ -34,6 +33,27 @@ async function fetchWithCacheFallback(request) {
     }
     throw error;
   }
+}
+
+async function getAllCachedStories() {
+  const cache = await caches.open(CACHE_NAME);
+  const keys = await cache.keys();
+
+  const storiesResponses = await Promise.all(keys.filter((request) => request.url.includes("/v1/stories/")).map((request) => cache.match(request)));
+
+  const stories = [];
+  for (const response of storiesResponses) {
+    if (response) {
+      try {
+        const data = await response.json();
+        stories.push(data);
+      } catch (e) {
+        console.error("Error parsing cached story", e);
+      }
+    }
+  }
+
+  return stories;
 }
 
 function urlBase64ToUint8Array(base64String) {
@@ -60,24 +80,16 @@ export async function getData() {
     }
 
     const data = await response.json();
-
-    if (data && Array.isArray(data.stories)) {
-      data.stories.forEach(async (story) => {
-        await saveStory(story);
-      });
-    }
-
     return data;
   } catch (error) {
-    console.log("Fetch gagal, mencoba ambil data dari IndexedDB...", error);
+    console.error("Error fetching data:", error);
 
-    const storedStories = await getStories();
-
-    if (storedStories && storedStories.length > 0) {
-      return { stories: storedStories };
+    const cachedStories = await getAllCachedStories();
+    if (cachedStories.length > 0) {
+      return cachedStories;
     }
 
-    throw new Error("Gagal mengambil data dari API dan IndexedDB");
+    throw new Error("Gagal mengambil data dari API ");
   }
 }
 
@@ -199,7 +211,6 @@ export async function subscribePush() {
 export async function unsubscribePush() {
   const registration = await navigator.serviceWorker.ready;
   const subscription = await registration.pushManager.getSubscription();
-  const VAPID_PUBLIC_KEY = CONFIG.VAPID_PUBLIC_KEY;
 
   if (subscription) {
     const endpoint = subscription.endpoint;
