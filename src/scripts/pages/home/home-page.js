@@ -40,18 +40,18 @@ export default class HomePage {
 
   async afterRender() {
     this.presenter.loadStories();
+    this.presenter.loadStoriesFromDB();
 
     const addStoryButton = document.querySelector("#add-story-btn");
     if (addStoryButton) {
       addStoryButton.addEventListener("click", this.goToAddStoryPage);
     }
 
-    const showLikedButton = document.querySelector("#show-liked-btn");
-    if (showLikedButton) {
-      showLikedButton.addEventListener("click", () => {
-        this.presenter.loadStoriesFromDB();
-      });
-    }
+    // const showLikedButton = document.querySelector("#show-liked-btn");
+    // if (showLikedButton) {
+    //   showLikedButton.addEventListener("click", () => {
+    //   });
+    // }
   }
 
   showStories(stories) {
@@ -119,9 +119,9 @@ export default class HomePage {
     const likedStoriesTitle = document.querySelector("#liked-stories-title");
     const mapElement = document.getElementById("map");
 
-    // Hide main stories section
-    storyListElement.style.display = "none";
-    mapElement.style.display = "none";
+    // // Hide main stories section
+    // storyListElement.style.display = "none";
+    // mapElement.style.display = "none";
 
     // Show liked stories section
     likedStoryListElement.style.display = "block";
